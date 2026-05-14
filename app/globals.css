@@ -36,6 +36,35 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Invitation section animations */
+@keyframes hand-left {
+  from { opacity: 0; transform: translateX(-60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes hand-right {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fade-up-soft {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes stamp {
+  0%   { opacity: 0; transform: scale(2.2) translateY(-6px); filter: blur(4px); }
+  60%  { opacity: 1; transform: scale(0.92) translateY(2px);  filter: blur(0); }
+  100% { opacity: 1; transform: scale(1)   translateY(0);     filter: blur(0); }
+}
+
+.inv-hand-left  { opacity: 0; }
+.inv-hand-right { opacity: 0; }
+.inv-text       { opacity: 0; }
+.inv-date-char  { opacity: 0; }
+
+.inv-animate .inv-hand-left  { animation: hand-left   0.9s cubic-bezier(0.22,1,0.36,1) 0.1s  forwards; }
+.inv-animate .inv-hand-right { animation: hand-right  0.9s cubic-bezier(0.22,1,0.36,1) 0.1s  forwards; }
+.inv-animate .inv-text       { animation: fade-up-soft 1s  cubic-bezier(0.22,1,0.36,1) 0.85s forwards; }
+.inv-animate .inv-date-char  { animation: stamp 0.55s cubic-bezier(0.34,1.56,0.64,1) var(--delay) forwards; }
+
 /* Hero entrance animations */
 @keyframes hero-fade-up {
   from {
