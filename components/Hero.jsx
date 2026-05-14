@@ -26,7 +26,7 @@ export default function Hero() {
       <section
         ref={sectionRef}
         className="relative h-[100dvh] w-full"
-        style={{ transformOrigin: "top center", willChange: "transform, opacity, filter" }}
+        style={{ transformOrigin: "top center", willChange: "transform, opacity, filter", backgroundColor: "#4b4b3a" }}
       >
         <Image
           src="/heroImage.webp"
