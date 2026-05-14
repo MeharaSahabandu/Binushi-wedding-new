@@ -48,6 +48,17 @@ export default function RootLayout({ children }) {
         ].join(" ")}
       >
         {children}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            function remove() {
+              var el = document.querySelector('vercel-toolbar');
+              if (el) { el.remove(); return; }
+            }
+            var obs = new MutationObserver(remove);
+            obs.observe(document.body, { childList: true, subtree: true });
+            remove();
+          })();
+        `}} />
       </body>
     </html>
   );
