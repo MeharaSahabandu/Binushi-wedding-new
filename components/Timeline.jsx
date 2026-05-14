@@ -5,28 +5,38 @@ import { useEffect, useRef } from "react";
 
 export default function TimelineTitle() {
   const sectionRef = useRef(null);
-  const innerRef   = useRef(null);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const inner   = innerRef.current;
-    if (!section || !inner) return;
+    if (!section) return;
+
+    const items = section.querySelectorAll(".tl-row");
 
     const onScroll = () => {
-      const rect = section.getBoundingClientRect();
-      const vh   = window.innerHeight;
+      const vh = window.innerHeight;
 
-      // starts animating 1.5 viewports before section top reaches top of screen
-      const progress = Math.min(1, Math.max(0, 1 - rect.top / (vh * 1.5)));
+      items.forEach((item) => {
+        const rect   = item.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
 
-      const scale      = 0.42 + progress * 0.58;        // 0.42 → 1.00
-      const rotateX    = 32 - progress * 32;            // 32deg → 0deg
-      const translateZ = -400 + progress * 400;         // -400px → 0px
-      const blur       = (1 - progress) * 10;           // 10px → 0px
+        // -1 = well above center (passed), 0 = at center, +1 = well below (upcoming)
+        const rel = (center - vh * 0.5) / (vh * 0.6);
+        const clamped = Math.max(-1, Math.min(1, rel));
 
-      inner.style.transform = `perspective(900px) rotateX(${rotateX}deg) scale(${scale}) translateZ(${translateZ}px)`;
-      inner.style.opacity   = Math.min(1, progress * 1.6);
-      inner.style.filter    = `blur(${blur}px)`;
+        // Upcoming items come from depth; passed items drift slightly behind
+        const translateZ = clamped > 0
+          ? -clamped * 160          // approaching: -160px → 0
+          : clamped * 30;           // passed: 0 → +30px (very subtle)
+
+        const opacity = clamped > 0
+          ? 1 - clamped * 0.7       // fade in as approaching
+          : 1 + clamped * 0.25;     // slight fade as passed
+
+        const scale = 1 - Math.max(0, clamped) * 0.08; // shrink slightly when far
+
+        item.style.transform = `perspective(900px) translateZ(${translateZ}px) scale(${scale})`;
+        item.style.opacity   = Math.max(0, opacity);
+      });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -35,12 +45,9 @@ export default function TimelineTitle() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative bg-[#f8f6f2] text-[#2c2c2c] overflow-hidden">
-      <div
-        ref={innerRef}
-        className="max-w-5xl mx-auto px-6 py-20 md:py-40 relative"
-        style={{ transformOrigin: "center top", willChange: "transform, opacity" }}
-      >
+    <section ref={sectionRef} className="relative bg-[#f8f6f2] text-[#2c2c2c]">
+      <div className="max-w-5xl mx-auto px-6 py-20 md:py-40 relative">
+
         {/* Title Block */}
         <div className="text-center mb-16">
           <p className="font-script text-[1.5rem] md:text-[6rem] leading-none text-black/10 select-none">
@@ -54,17 +61,9 @@ export default function TimelineTitle() {
         {/* Block 1: Image Left / Schedule Right */}
         <div className="grid grid-cols-[1fr_1.2fr] gap-6 md:gap-12 items-stretch mb-16">
           <div className="relative h-full overflow-hidden -ml-6 md:ml-0">
-            <Image
-              src="/timelineLeft.webp"
-              alt="Couple photo"
-              fill
-              priority
-              className="object-cover object-[20%_center]"
-            />
+            <Image src="/timelineLeft.webp" alt="Couple photo" fill priority className="object-cover object-[20%_center]" />
             <p className="absolute top-4 left-4 font-third text-white/95 text-sm md:text-base drop-shadow">
-              A gentle kind
-              <br />
-              of forever
+              A gentle kind<br />of forever
             </p>
           </div>
 
@@ -94,20 +93,13 @@ export default function TimelineTitle() {
           </div>
 
           <div className="relative h-full overflow-hidden -mr-6 md:mr-0">
-            <Image
-              src="/timelineRight.webp"
-              alt="Reception photo"
-              fill
-              priority
-              className="object-cover object-[10%_center] md:object-[75%_center]"
-            />
+            <Image src="/timelineRight.webp" alt="Reception photo" fill priority className="object-cover object-[10%_center] md:object-[75%_center]" />
             <p className="absolute top-4 left-4 font-third text-white/95 text-sm md:text-base drop-shadow">
-              Where love lives,
-              <br />
-              joy follows
+              Where love lives,<br />joy follows
             </p>
           </div>
         </div>
+
       </div>
     </section>
   );
@@ -115,7 +107,7 @@ export default function TimelineTitle() {
 
 function TimelineItem({ time, text }) {
   return (
-    <div className="flex flex-col items-start gap-1">
+    <div className="tl-row flex flex-col items-start gap-1" style={{ willChange: "transform, opacity" }}>
       <span className="font-display text-base md:text-lg">{time}</span>
       <p className="font-display text-base md:text-lg leading-7">{text}</p>
     </div>
