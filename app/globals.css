@@ -84,12 +84,12 @@ body {
 
 .animate-hero-title {
   opacity: 0;
-  animation: hero-fade-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+  animation: hero-fade-up 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
 }
 
 .animate-hero-subtitle {
   opacity: 0;
-  animation: hero-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
+  animation: hero-fade-up 2s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards;
 }
 
 /* Utility classes so you can easily call the wedding fonts */
