@@ -30,8 +30,13 @@
   }
 }
 
-/* Hide Vercel toolbar */
-vercel-toolbar { display: none !important; }
+/* Hide Vercel / Next.js toolbar */
+vercel-toolbar,
+nextjs-portal,
+#vercel-toolbar,
+#__vercel_toolbar,
+[data-vercel-toolbar],
+iframe[src*="vercel.live"] { display: none !important; }
 
 body {
   background: var(--background);

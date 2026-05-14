@@ -50,12 +50,22 @@ export default function RootLayout({ children }) {
         {children}
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
+            var SELECTORS = [
+              'vercel-toolbar',
+              'nextjs-portal',
+              '#vercel-toolbar',
+              '#__vercel_toolbar',
+              '[data-vercel-toolbar]',
+              'iframe[src*="vercel.live"]',
+              'iframe[src*="vercel-insights"]',
+            ];
             function remove() {
-              var el = document.querySelector('vercel-toolbar');
-              if (el) { el.remove(); return; }
+              SELECTORS.forEach(function(sel) {
+                document.querySelectorAll(sel).forEach(function(el) { el.remove(); });
+              });
             }
             var obs = new MutationObserver(remove);
-            obs.observe(document.body, { childList: true, subtree: true });
+            obs.observe(document.documentElement, { childList: true, subtree: true });
             remove();
           })();
         `}} />
