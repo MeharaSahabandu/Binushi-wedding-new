@@ -43,7 +43,7 @@ export default function Hero() {
       {/* Text overlay */}
       <div className="absolute inset-x-0 bottom-16 md:bottom-20 flex flex-col items-center">
         {/* Title */}
-        <h1 className="font-display text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-tight tracking-wide text-center drop-shadow">
+        <h1 className="animate-hero-title font-display text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl leading-tight tracking-wide text-center drop-shadow">
           {/* Mobile (stacked) */}
           <span className="block lg:hidden">
             BINUSHI
@@ -56,7 +56,7 @@ export default function Hero() {
         </h1>
 
         {/* Subtitle */}
-        <p className="font-script italic text-white/90 text-xl sm:text-2xl md:text-3xl lg:text-4xl mt-2 text-center px-6 drop-shadow">
+        <p className="animate-hero-subtitle font-script italic text-white/90 text-xl sm:text-2xl md:text-3xl lg:text-4xl mt-2 text-center px-6 drop-shadow">
           Forever begins with this magical moment
         </p>
       </div>

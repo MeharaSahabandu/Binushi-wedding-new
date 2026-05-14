@@ -36,6 +36,33 @@ body {
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
 
+/* Hero entrance animations */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.animate-hero-title {
+  opacity: 0;
+  animation: hero-fade-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+}
+
+.animate-hero-subtitle {
+  opacity: 0;
+  animation: hero-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
+}
+
 /* Utility classes so you can easily call the wedding fonts */
 .font-display {
   font-family: var(--font-display);
