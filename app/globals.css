@@ -64,6 +64,25 @@ body {
 .inv-animate .inv-text       { animation: fade-up-soft 1s  cubic-bezier(0.22,1,0.36,1) 0.85s forwards; }
 .inv-animate .inv-date-char  { animation: date-char-in 0.8s cubic-bezier(0.22,1,0.36,1) var(--delay) forwards; }
 
+/* Timeline animations */
+@keyframes timeline-emerge {
+  from {
+    opacity: 0;
+    transform: perspective(700px) translateZ(-60px) translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(700px) translateZ(0) translateY(0);
+  }
+}
+
+.tl-item {
+  opacity: 0;
+}
+.tl-item.tl-visible {
+  animation: timeline-emerge 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 /* Hero entrance animations */
 @keyframes hero-fade-up {
   from {

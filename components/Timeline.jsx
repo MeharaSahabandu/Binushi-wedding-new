@@ -1,26 +1,25 @@
-// components/TimelineTitle.jsx
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 export default function TimelineTitle() {
   return (
     <section className="relative bg-[#f8f6f2] dark:bg-[#f8f6f2] text-[#2c2c2c]">
       <div className="max-w-5xl mx-auto px-6 py-20 md:py-40 relative">
+
         {/* Title Block */}
         <div className="text-center mb-16">
-          {/* Script title (top) */}
           <p className="font-script text-[1.5rem] md:text-[6rem] leading-none text-black/10 select-none">
             Wedding Schedule
           </p>
-
-          {/* Main title (bottom) */}
           <h3 className="mt-0.1 font-display tracking-wide text-[1.25rem] md:text-[1.875rem] inline-block font-normal">
             WEDDING DAY TIMELINE
           </h3>
         </div>
 
-        {/* --- Block 1: Image Left / Schedule Right --- */}
+        {/* Block 1: Image Left / Schedule Right */}
         <div className="grid grid-cols-[1fr_1.2fr] gap-6 md:gap-12 items-stretch mb-16">
-          {/* LEFT: Photo */}
           <div className="relative h-full overflow-hidden -ml-6 md:ml-0">
             <Image
               src="/timelineLeft.webp"
@@ -36,7 +35,6 @@ export default function TimelineTitle() {
             </p>
           </div>
 
-          {/* RIGHT: Schedule */}
           <div className="space-y-6 md:space-y-7 bg-[#f8f6f2] h-full">
             <TimelineItem time="3:45 pm" text="Guests arrival to the church" />
             <Separator />
@@ -44,23 +42,16 @@ export default function TimelineTitle() {
             <Separator />
             <TimelineItem time="5 pm" text="Church high tea" />
             <Separator />
-            <TimelineItem
-              time="6:15 pm"
-              text="Travel to the hotel from church"
-            />
+            <TimelineItem time="6:15 pm" text="Travel to the hotel from church" />
           </div>
         </div>
 
-        {/* --- Block 2: Schedule Left / Image Right --- */}
+        {/* Block 2: Schedule Left / Image Right */}
         <div className="grid grid-cols-[1.2fr_1fr] gap-6 md:gap-12 items-stretch">
-          {/* LEFT: Schedule */}
           <div className="space-y-6 md:space-y-7 bg-[#f8f6f2] h-full">
             <TimelineItem time="7 pm" text="Reception Opens" />
             <Separator />
-            <TimelineItem
-              time="7:30 pm"
-              text="Couple entering to the reception "
-            />
+            <TimelineItem time="7:30 pm" text="Couple entering to the reception" />
             <Separator />
             <TimelineItem time="8:15 pm" text="First dance" />
             <Separator />
@@ -69,7 +60,6 @@ export default function TimelineTitle() {
             <TimelineItem time="12:30 am" text="Going away" />
           </div>
 
-          {/* RIGHT: Photo */}
           <div className="relative h-full overflow-hidden -mr-6 md:mr-0">
             <Image
               src="/timelineRight.webp"
@@ -85,22 +75,43 @@ export default function TimelineTitle() {
             </p>
           </div>
         </div>
+
       </div>
     </section>
   );
 }
 
-/* One timeline row */
 function TimelineItem({ time, text }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="flex flex-col items-start gap-1">
+    <div
+      ref={ref}
+      className={`tl-item flex flex-col items-start gap-1${visible ? " tl-visible" : ""}`}
+    >
       <span className="font-display text-base md:text-lg">{time}</span>
       <p className="font-display text-base md:text-lg leading-7">{text}</p>
     </div>
   );
 }
 
-/* Divider line */
 function Separator() {
   return <div className="h-px bg-[#2c2c2c]/15" />;
 }
