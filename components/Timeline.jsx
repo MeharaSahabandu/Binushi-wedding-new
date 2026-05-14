@@ -13,19 +13,20 @@ export default function TimelineTitle() {
     if (!section || !inner) return;
 
     const onScroll = () => {
-      const rect     = section.getBoundingClientRect();
-      const vh       = window.innerHeight;
+      const rect = section.getBoundingClientRect();
+      const vh   = window.innerHeight;
 
-      // progress: 0 when section top hits viewport bottom, 1 when section top hits viewport top
-      const progress = Math.min(1, Math.max(0, 1 - rect.top / vh));
+      // starts animating 1.5 viewports before section top reaches top of screen
+      const progress = Math.min(1, Math.max(0, 1 - rect.top / (vh * 1.5)));
 
-      // Dive-in: starts tilted & small (like a distant card), zooms in flat as you scroll
-      const scale    = 0.82 + progress * 0.18;          // 0.82 → 1.00
-      const rotateX  = 10 - progress * 10;              // 10deg → 0deg
-      const translateZ = -120 + progress * 120;         // -120px → 0px
+      const scale      = 0.42 + progress * 0.58;        // 0.42 → 1.00
+      const rotateX    = 32 - progress * 32;            // 32deg → 0deg
+      const translateZ = -400 + progress * 400;         // -400px → 0px
+      const blur       = (1 - progress) * 10;           // 10px → 0px
 
-      inner.style.transform = `perspective(1100px) rotateX(${rotateX}deg) scale(${scale}) translateZ(${translateZ}px)`;
-      inner.style.opacity   = 0.3 + progress * 0.7;     // 0.3 → 1.0
+      inner.style.transform = `perspective(900px) rotateX(${rotateX}deg) scale(${scale}) translateZ(${translateZ}px)`;
+      inner.style.opacity   = Math.min(1, progress * 1.6);
+      inner.style.filter    = `blur(${blur}px)`;
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
