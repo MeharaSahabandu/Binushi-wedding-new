@@ -22,7 +22,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <div style={{ perspective: "900px" }}>
+    <div style={{ perspective: "900px", backgroundColor: "#4b4b3a" }}>
       <section
         ref={sectionRef}
         className="relative h-[100dvh] w-full"
