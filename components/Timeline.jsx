@@ -1,13 +1,45 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function TimelineTitle() {
-  return (
-    <section className="relative bg-[#f8f6f2] dark:bg-[#f8f6f2] text-[#2c2c2c]">
-      <div className="max-w-5xl mx-auto px-6 py-20 md:py-40 relative">
+  const sectionRef = useRef(null);
+  const innerRef   = useRef(null);
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const inner   = innerRef.current;
+    if (!section || !inner) return;
+
+    const onScroll = () => {
+      const rect     = section.getBoundingClientRect();
+      const vh       = window.innerHeight;
+
+      // progress: 0 when section top hits viewport bottom, 1 when section top hits viewport top
+      const progress = Math.min(1, Math.max(0, 1 - rect.top / vh));
+
+      // Dive-in: starts tilted & small (like a distant card), zooms in flat as you scroll
+      const scale    = 0.82 + progress * 0.18;          // 0.82 → 1.00
+      const rotateX  = 10 - progress * 10;              // 10deg → 0deg
+      const translateZ = -120 + progress * 120;         // -120px → 0px
+
+      inner.style.transform = `perspective(1100px) rotateX(${rotateX}deg) scale(${scale}) translateZ(${translateZ}px)`;
+      inner.style.opacity   = 0.3 + progress * 0.7;     // 0.3 → 1.0
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="relative bg-[#f8f6f2] text-[#2c2c2c] overflow-hidden">
+      <div
+        ref={innerRef}
+        className="max-w-5xl mx-auto px-6 py-20 md:py-40 relative"
+        style={{ transformOrigin: "center top", willChange: "transform, opacity" }}
+      >
         {/* Title Block */}
         <div className="text-center mb-16">
           <p className="font-script text-[1.5rem] md:text-[6rem] leading-none text-black/10 select-none">
@@ -75,37 +107,14 @@ export default function TimelineTitle() {
             </p>
           </div>
         </div>
-
       </div>
     </section>
   );
 }
 
 function TimelineItem({ time, text }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.4 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div
-      ref={ref}
-      className={`tl-item flex flex-col items-start gap-1${visible ? " tl-visible" : ""}`}
-    >
+    <div className="flex flex-col items-start gap-1">
       <span className="font-display text-base md:text-lg">{time}</span>
       <p className="font-display text-base md:text-lg leading-7">{text}</p>
     </div>
