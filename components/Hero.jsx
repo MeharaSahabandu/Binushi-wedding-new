@@ -1,9 +1,32 @@
-// components/Hero.jsx
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 export default function Hero() {
+  const sectionRef = useRef(null);
+  const [style, setStyle] = useState({ opacity: 1, transform: "translateY(0px)" });
+
+  useEffect(() => {
+    const onScroll = () => {
+      const section = sectionRef.current;
+      if (!section) return;
+      const height = section.offsetHeight;
+      const scrollY = window.scrollY;
+      const progress = Math.min(scrollY / height, 1);
+
+      setStyle({
+        opacity: 1 - progress * 1.4,
+        transform: `translateY(-${progress * 80}px)`,
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section className="relative h-[100dvh] w-full">
+    <section ref={sectionRef} className="relative h-[100dvh] w-full" style={style}>
       {/* Background image */}
       <Image
         src="/heroImage.webp"
